@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #fff3b0; /* Pastel Yellow */
+  --color-secondary: #ffcbf2; /* Pastel Pink */
+  --color-accent: #c0fdfb; /* Mint */
+  --color-background: #fffdf7; /* Warm White */
+  --color-surface: #ffffff;
+  --color-foreground: #5c4d5c; /* Soft Dark Purple */
+  --color-border: #f0e6f0;
+  --color-muted: #9e8e9e;
+
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* Custom scrollbar to fit the kawaii theme */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-secondary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
