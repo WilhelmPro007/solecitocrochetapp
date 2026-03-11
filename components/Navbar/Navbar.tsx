@@ -1,56 +1,69 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Heart, ShoppingBag, Menu } from 'lucide-react';
+import { Search, Heart, ShoppingBag, Menu, Loader2 } from 'lucide-react';
+import { useCategories } from '@/hooks/use-catalog';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
+  const { data: categories, loading } = useCategories();
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
-    <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border shadow-sm">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Left section: Nav Links */}
-          <div className="flex items-center gap-4 flex-1">
-            <button className="p-2 text-foreground hover:bg-secondary/50 rounded-full transition-colors lg:hidden">
-              <Menu className="w-5 h-5" />
-            </button>
-            <div className="hidden lg:flex gap-6 font-display font-bold text-sm text-foreground/80 tracking-wide uppercase">
-              <Link href="#" className="hover:text-secondary hover:-translate-y-0.5 transition-all">New</Link>
-              <Link href="#" className="hover:text-secondary hover:-translate-y-0.5 transition-all">Collabs</Link>
-              <Link href="#" className="hover:text-secondary hover:-translate-y-0.5 transition-all">Plush & Toys</Link>
-              <Link href="#" className="text-secondary hover:text-primary hover:-translate-y-0.5 transition-all">Kawaii Spring</Link>
-            </div>
-          </div>
-
-          {/* Center section: Logo */}
-          <div className="flex-1 flex justify-center">
-            <Link href="/" className="font-display font-bold text-3xl md:text-4xl text-foreground tracking-tight group flex items-center gap-2">
-              <span className="text-primary group-hover:rotate-12 transition-transform duration-300">🌞</span> 
-              Solecito<span className="text-secondary">Crochet</span>
-            </Link>
-          </div>
-
-          {/* Right section: Search & Actions */}
-          <div className="flex items-center justify-end gap-2 flex-1">
-            <div className="hidden xl:flex relative group">
-              <input 
-                type="text" 
-                placeholder="What are you looking for?" 
-                className="pl-4 pr-10 py-2 w-72 bg-surface border border-border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary/50 transition-all font-sans"
-              />
-              <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-foreground">
-                <Search className="w-4 h-4" />
-              </button>
-            </div>
-            
-            <button className="p-2 text-foreground hover:bg-secondary/50 rounded-full transition-colors relative group ml-2">
-              <Heart className="w-6 h-6 group-hover:scale-110 group-hover:fill-secondary/30 transition-all" />
-            </button>
-            
-            <button className="p-2 text-foreground hover:bg-secondary/50 rounded-full transition-colors relative group">
-              <ShoppingBag className="w-6 h-6 group-hover:scale-110 group-hover:fill-secondary/30 transition-all" />
-              <span className="absolute top-0 right-0 w-5 h-5 bg-primary text-[11px] font-bold text-foreground flex items-center justify-center rounded-full border border-surface shadow-sm">
-                0
+    <nav className="sticky top-0 z-50 bg-white shadow-sm">
+      
+      {/* Main Nav */}
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div className="flex flex-col items-center py-6">
+           {/* Logo - Sanrio Style */}
+           <Link href="/" className="mb-6">
+              <span className="font-display font-black text-3xl tracking-tighter uppercase text-[#111111]">
+                 Solecito<span className="text-primary italic">Crochet</span>
               </span>
-            </button>
-          </div>
+           </Link>
+
+           {/* Navigation Links */}
+           <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 font-black text-[10px] text-[#111111] tracking-[0.2em] uppercase">
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin text-gray-300" />
+              ) : (
+                <>
+                  {Array.isArray(categories) && categories.map((cat: any) => (
+                    <Link 
+                      key={cat.id} 
+                      href={`/shop?category=${cat.id}`} 
+                      scroll={false}
+                      className="hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary pb-1"
+                    >
+                      {cat.name}
+                    </Link>
+                  ))}
+                </>
+              )}
+              <Link href="/about" className="hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary pb-1">Sobre Nosotros</Link>
+              
+              <form onSubmit={handleSearch} className="relative flex items-center ml-4">
+                 <input 
+                   type="text" 
+                   value={searchQuery}
+                   onChange={(e) => setSearchQuery(e.target.value)}
+                   placeholder="¿Qué estás buscando?" 
+                   className="bg-[#f0f9ff] border border-gray-200 pl-4 pr-10 py-1.5 text-[9px] font-bold w-[250px] focus:outline-none"
+                 />
+                 <button type="submit" className="absolute right-3">
+                   <Search className="w-4 h-4 text-gray-400" />
+                 </button>
+              </form>
+           </div>
         </div>
       </div>
     </nav>

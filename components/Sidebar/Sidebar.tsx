@@ -1,44 +1,80 @@
-import { CATEGORIES } from '@/lib/filters';
+import { ChevronDown, Loader2 } from 'lucide-react';
+import { useCategories } from '@/hooks/use-catalog';
 
-export default function Sidebar() {
+interface SidebarProps {
+  activeCategory?: string;
+  onSelectCategory?: (categoryId: string) => void;
+}
+
+export default function Sidebar({ activeCategory, onSelectCategory }: SidebarProps) {
+  const { data: categories, loading } = useCategories();
+
   return (
     <aside className="w-64 flex-shrink-0 hidden md:block">
-      <div className="sticky top-28 font-sans">
+      <div className="sticky top-28">
         
-        {/* Filter Header */}
-        <div className="pb-4 mb-6 border-b border-border">
-          <h2 className="font-display font-bold text-sm tracking-widest uppercase text-foreground">
-            Filter By:
-          </h2>
-        </div>
-
-        {/* Product Type Filter */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4 cursor-pointer group">
-            <h3 className="text-sm font-semibold text-foreground group-hover:text-secondary transition-colors">
-              Category
+        {/* Filter Section */}
+        <div className="space-y-8">
+          {/* Category */}
+          <div>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#111111] mb-5 pb-2 border-b border-border flex justify-between items-center">
+              Categoría
+              <ChevronDown className="w-3 h-3" />
             </h3>
-            <span className="text-muted group-hover:text-secondary transition-colors">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
-            </span>
-          </div>
-          
-          <ul className="space-y-3">
-            {CATEGORIES.map((cat) => (
-              <li key={cat} className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-4 h-4 border border-border rounded flex items-center justify-center group-hover:border-secondary transition-colors">
+            <ul className="space-y-3.5">
+              {loading ? (
+                <div className="flex justify-center py-4">
+                  <Loader2 className="w-4 h-4 animate-spin text-gray-300" />
                 </div>
-                <span className="text-sm text-foreground/80 group-hover:text-foreground transition-colors">
-                  {cat}
-                </span>
-              </li>
-            ))}
-          </ul>
+              ) : (
+                Array.isArray(categories) && categories.map((cat) => (
+                  <li 
+                    key={cat.id} 
+                    onClick={() => onSelectCategory?.(cat.id)}
+                    className="flex items-center gap-3 group cursor-pointer"
+                  >
+                    <div className={`w-4 h-4 border-2 transition-colors flex items-center justify-center ${
+                      activeCategory === cat.id ? 'border-primary' : 'border-border group-hover:border-primary'
+                    }`}>
+                      <div className={`w-2 h-2 bg-primary transition-transform ${
+                        activeCategory === cat.id ? 'scale-100' : 'scale-0 group-hover:scale-100'
+                      }`}></div>
+                    </div>
+                    <span className={`text-[11px] font-bold uppercase tracking-wider transition-colors ${
+                      activeCategory === cat.id ? 'text-[#111111]' : 'text-[#111111]/70 group-hover:text-[#111111]'
+                    }`}>
+                      {cat.name}
+                    </span>
+                  </li>
+                ))
+              )}
+            </ul>
+          </div>
+
+          {/* Character */}
+          <div>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#111111] mb-5 pb-2 border-b border-border flex justify-between items-center">
+              Personaje
+              <ChevronDown className="w-3 h-3 text-[#111111]/30" />
+            </h3>
+            <ul className="space-y-3.5">
+              {['Personajes', 'Inspiración', 'Originales'].map((char) => (
+                <li key={char} className="flex items-center gap-3 group cursor-pointer">
+                   <div className="w-4 h-4 border-2 border-border rounded-none group-hover:border-primary transition-colors"></div>
+                   <span className="text-[11px] font-bold uppercase tracking-wider text-[#111111]/70 group-hover:text-[#111111]">
+                    {char}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        {/* Clear All Button */}
-        <button className="w-full py-2 bg-surface border border-border text-xs font-bold tracking-widest uppercase hover:bg-secondary/20 hover:border-secondary transition-all rounded-sm text-foreground mt-4">
-          Clear All
+        <button 
+          onClick={() => onSelectCategory?.('')}
+          className="w-full py-3 bg-white border-2 border-[#111111] text-[10px] font-black tracking-widest uppercase hover:bg-[#111111] hover:text-white transition-all rounded-none mt-10"
+        >
+          Limpiar Filtros
         </button>
       </div>
     </aside>

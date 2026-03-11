@@ -40,7 +40,7 @@ export const mockProducts: Product[] = [
     title: "Sleeping Kitty Keychain",
     price: 15.0,
     imageUrl: "https://placehold.co/400x500/ffcbf2/5c4d5c?text=Kitty+Keychain",
-    category: "Accessories",
+    category: "Accesorios",
     character: "Kitty",
   },
   {
@@ -48,7 +48,7 @@ export const mockProducts: Product[] = [
     title: "Pastel Bear Cardigan",
     price: 120.0,
     imageUrl: "https://placehold.co/400x500/c0fdfb/5c4d5c?text=Bear+Cardigan",
-    category: "Wearables",
+    category: "Personalizado",
     character: "Bear",
     badge: "Low Stock",
   },
@@ -57,7 +57,7 @@ export const mockProducts: Product[] = [
     title: "Lemon Slice Coaster Set",
     price: 18.0,
     imageUrl: "https://placehold.co/400x500/fff3b0/5c4d5c?text=Lemon+Coasters",
-    category: "Home",
+    category: "Accesorios",
   },
   {
     id: "prod_7",
@@ -72,7 +72,7 @@ export const mockProducts: Product[] = [
     title: "Tulip Bouquet Crochet",
     price: 45.0,
     imageUrl: "https://placehold.co/400x500/ffcbf2/5c4d5c?text=Tulip+Bouquet",
-    category: "Home",
+    category: "Flores",
     badge: "Gift Idea",
   },
   {
@@ -80,14 +80,14 @@ export const mockProducts: Product[] = [
     title: "Mushroom Crossbody Bag",
     price: 55.0,
     imageUrl: "https://placehold.co/400x500/c0fdfb/5c4d5c?text=Mushroom+Bag",
-    category: "Accessories",
+    category: "Accesorios",
   },
   {
     id: "prod_10",
     title: "Cloud Pillow Crochet",
     price: 40.0,
     imageUrl: "https://placehold.co/400x500/fffdf7/5c4d5c?text=Cloud+Pillow",
-    category: "Home",
+    category: "Personalizado",
     badge: "Bestseller",
   },
   {
@@ -103,6 +103,6 @@ export const mockProducts: Product[] = [
     title: "Sunflower Hair Clips",
     price: 12.0,
     imageUrl: "https://placehold.co/400x500/fff3b0/5c4d5c?text=Sunflower+Clips",
-    category: "Accessories",
+    category: "Accesorios",
   },
 ];

@@ -1,15 +1,15 @@
 export const CATEGORIES = [
-  "All",
+  "Todos",
   "Amigurumi",
-  "Wearables",
-  "Accessories",
-  "Home",
+  "Prendas",
+  "Accesorios",
+  "Hogar",
 ];
 
 export const CHARACTERS = [
-  "Bunny",
-  "Kitty",
-  "Bear",
-  "Frog",
-  "Food",
+  "Conejo",
+  "Gatito",
+  "Oso",
+  "Ranita",
+  "Comida",
 ];

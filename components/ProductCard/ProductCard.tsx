@@ -1,4 +1,5 @@
-import { Product } from '@/lib/data';
+import Link from 'next/link';
+import { Product } from '@/types/api';
 import { Heart } from 'lucide-react';
 import Image from 'next/image';
 
@@ -7,53 +8,50 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  return (
-    <div className="group flex flex-col items-center bg-surface border border-border shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden rounded-sm h-full w-full">
-      {/* Badge container */}
-      <div className="absolute top-3 left-3 flex flex-col gap-2 z-10 w-full pr-6">
-        <div className="flex justify-between items-start w-full">
-            {product.badge ? (
-              <span className="bg-primary text-foreground text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded-sm shadow-sm inline-block">
-                {product.badge}
-              </span>
-            ) : (
-                <div />
-            )}
-            <button className="text-muted hover:text-secondary hover:scale-110 transition-all p-1 z-20">
-              <Heart className="w-5 h-5 group-hover:fill-secondary/20 transition-all" />
-            </button>
-        </div>
-      </div>
-      
-      {/* Image Container with Hover zoom */}
-      <div className="relative w-full aspect-[4/5] bg-background mb-4 overflow-hidden border-b border-border">
-          <Image 
-            src={product.imageUrl.replace('placehold.co', 'placehold.co/800x1000')} // ensure high res request 
-            alt={product.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            unoptimized // Since placehold.co has issues with next/image sometimes
-            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-          />
-      </div>
+  const primaryImage = Array.isArray(product.images) 
+    ? (product.images.find(img => img.isPrimary) || product.images[0])
+    : undefined;
+  const productPrice = parseFloat(product.price);
 
-      {/* Content */}
-      <div className="px-4 pb-0 flex flex-col items-center flex-grow w-full text-center">
-        <h3 className="font-sans text-sm font-medium text-foreground mb-2 px-2 line-clamp-2">
-          {product.title}
-        </h3>
-      </div>
-      
-      {/* Price & Action Container (Sanrio style: action appears/slides on hover or is explicit) */}
-      <div className="w-full flex justify-between items-center border-t border-border mt-auto">
-          <div className="py-3 px-4 w-1/3 border-r border-border text-center">
-             <span className="font-bold text-sm text-foreground/90 font-sans tracking-wide">
-                ${product.price.toFixed(2)}
-             </span>
-          </div>
-          <button className="w-2/3 py-3 font-display font-bold text-xs tracking-widest uppercase text-foreground bg-surface hover:bg-secondary/20 transition-colors h-full">
-            Add to Bag
-          </button>
+  return (
+    <div className="group bg-white flex flex-col h-full transition-all duration-300 relative border border-transparent hover:border-gray-100">
+      {/* Image Container - Sanrio style gray box */}
+      <Link href={`/product/${product.slug}`} className="relative aspect-square w-full overflow-hidden bg-[#f7f7f7] block">
+        {/* Note: Badge is not in the basic API contract but could be added later or handled via metadata if available */}
+        <Image 
+          src={primaryImage?.url || 'https://placehold.co/400x500/f7f7f7/cccccc?text=No+Image'} 
+          alt={primaryImage?.altText || product.name}
+          fill
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
+          className="object-contain p-6 group-hover:scale-105 transition-transform duration-500 Mix-blend-multiply"
+        />
+        
+        {/* Heart Icon (Top Right) */}
+        <button className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+           <Heart className="w-5 h-5 text-[#111111] hover:fill-primary hover:text-primary transition-all" />
+        </button>
+      </Link>
+
+      {/* Info Section */}
+      <div className="p-3 flex flex-col flex-1 bg-white">
+        <Link href={`/product/${product.slug}`} className="block mb-4">
+          <h3 className="text-[11px] leading-tight font-medium text-[#111111] hover:text-primary transition-colors line-clamp-2 h-8 uppercase tracking-wider">
+            {product.name}
+          </h3>
+        </Link>
+        
+        {/* Sanrio Style Combined Button/Price */}
+        <div className="mt-auto border border-[#111111] flex overflow-hidden">
+           <div className="flex-1 px-3 py-2 text-[11px] font-black flex items-center justify-center border-r border-[#111111]">
+             ${!isNaN(productPrice) ? productPrice.toFixed(2) : product.price}
+           </div>
+           <Link 
+             href={`/product/${product.slug}`}
+             className="flex-[2] py-2 text-[10px] font-black uppercase tracking-widest text-center hover:bg-[#111111] hover:text-white transition-all flex items-center justify-center"
+           >
+             Ver Detalle
+           </Link>
+        </div>
       </div>
     </div>
   );

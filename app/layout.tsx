@@ -15,8 +15,8 @@ const quicksand = Quicksand({
 });
 
 export const metadata: Metadata = {
-  title: "Solecito Crochet | Kawaii Amigurumi & Accessories",
-  description: "Handcrafted kawaii crochet items, amigurumis, blankets, and more.",
+  title: "Solecito Crochet | Amigurumis y Accesorios Kawaii",
+  description: "Artículos de crochet hechos a mano, amigurumis, mantas y más.",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body className={`${nunito.variable} ${quicksand.variable} antialiased bg-background text-foreground font-sans`}>
         {children}
       </body>
