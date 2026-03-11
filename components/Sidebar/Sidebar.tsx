@@ -1,5 +1,8 @@
-import { ChevronDown, Loader2 } from 'lucide-react';
+import { ChevronDown, Loader2, Search } from 'lucide-react';
 import { useCategories } from '@/hooks/use-catalog';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useDebounce } from '@/hooks/use-debounce';
 
 interface SidebarProps {
   activeCategory?: string;
@@ -8,11 +11,51 @@ interface SidebarProps {
 
 export default function Sidebar({ activeCategory, onSelectCategory }: SidebarProps) {
   const { data: categories, loading } = useCategories();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  const initialSearch = searchParams.get('q') || '';
+  const [localSearch, setLocalSearch] = useState(initialSearch);
+  const debouncedSearch = useDebounce(localSearch, 600);
+
+  // Sync with URL if it changes from Navbar
+  useEffect(() => {
+    setLocalSearch(searchParams.get('q') || '');
+  }, [searchParams]);
+
+  // Update URL on local search debounce
+  useEffect(() => {
+    if (debouncedSearch !== initialSearch) {
+      if (debouncedSearch.trim()) {
+        router.push(`/shop?q=${encodeURIComponent(debouncedSearch.trim())}${activeCategory ? `&category=${activeCategory}` : ''}`, { scroll: false });
+      } else if (initialSearch) {
+        if (activeCategory) {
+          router.push(`/shop?category=${activeCategory}`, { scroll: false });
+        } else {
+          router.push('/shop', { scroll: false });
+        }
+      }
+    }
+  }, [debouncedSearch, initialSearch, activeCategory, router]);
 
   return (
     <aside className="w-64 flex-shrink-0 hidden md:block">
       <div className="sticky top-28">
         
+        {/* Local Search */}
+        <div className="mb-8">
+          <div className="relative flex items-center">
+            <input 
+              type="text" 
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              placeholder="Buscar en catálogo..." 
+              className="w-full bg-[#f0f9ff] border border-gray-200 pl-4 pr-10 py-2.5 text-[10px] font-bold outline-none focus:border-primary transition-colors text-[#111111] uppercase tracking-wider"
+            />
+            <Search className="absolute right-3 w-4 h-4 text-gray-400" />
+          </div>
+        </div>
+
         {/* Filter Section */}
         <div className="space-y-8">
           {/* Category */}

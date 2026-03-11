@@ -1,20 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { Search, Heart, ShoppingBag, Menu, Loader2 } from 'lucide-react';
 import { useCategories } from '@/hooks/use-catalog';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useDebounce } from '@/hooks/use-debounce';
 
-export default function Navbar() {
+function NavbarContent() {
   const { data: categories, loading } = useCategories();
-  const [searchQuery, setSearchQuery] = useState('');
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams.get('q') || '';
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const debouncedSearch = useDebounce(searchQuery, 600);
   const router = useRouter();
+
+  // Update searchQuery if query params change externally
+  useEffect(() => {
+    setSearchQuery(searchParams.get('q') || '');
+  }, [searchParams]);
+
+  // Navigate on debounced search
+  useEffect(() => {
+    // Only navigate if the user actually typed something or cleared an existing search
+    if (debouncedSearch !== initialSearch) {
+      if (debouncedSearch.trim()) {
+        router.push(`/shop?q=${encodeURIComponent(debouncedSearch.trim())}`);
+      } else if (initialSearch) {
+        // If they cleared the box, remove the 'q' parameter by just going to /shop
+        router.push('/shop');
+      }
+    }
+  }, [debouncedSearch, initialSearch, router]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push('/shop');
     }
   };
 
@@ -22,7 +46,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-white shadow-sm">
       
       {/* Main Nav */}
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         <div className="flex flex-col items-center py-6">
            {/* Logo - Sanrio Style */}
            <Link href="/" className="mb-6">
@@ -67,5 +91,13 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+  );
+}
+
+export default function Navbar() {
+  return (
+    <Suspense fallback={<div className="h-32 bg-white w-full shadow-sm" />}>
+      <NavbarContent />
+    </Suspense>
   );
 }

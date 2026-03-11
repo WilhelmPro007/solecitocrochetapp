@@ -48,7 +48,7 @@ export default function LandingPage() {
            />
         </div>
 
-        <div className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-20 relative z-10 w-full flex justify-start">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10 w-full flex justify-start">
           <div className="max-w-2xl text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-100 text-[10px] font-black uppercase tracking-[0.2em] text-[#111111] mb-8 shadow-sm">
               <Sparkles className="w-3 h-3 text-primary" />
@@ -89,7 +89,7 @@ export default function LandingPage() {
       </div>
 
       {/* Featured Categories */}
-      <section className="py-24 px-4 max-w-[1400px] mx-auto">
+      <section className="py-24 px-4 md:px-8 max-w-[1400px] mx-auto">
         <div className="text-center mb-16">
           <h2 className="font-display font-black text-4xl md:text-5xl uppercase tracking-tighter text-[#111111] mb-4">
             Compra por <span className="text-primary">Estilo</span>

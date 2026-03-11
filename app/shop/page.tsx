@@ -70,7 +70,7 @@ function ShopContent() {
   };
 
   return (
-    <main className="max-w-[1500px] mx-auto px-4 md:px-8 py-10">
+    <main className="max-w-[1400px] mx-auto px-4 md:px-8 py-10">
       {/* Shop Info Header */}
       <div className="mb-10 pl-1 border-b border-border pb-6 flex justify-between items-end">
         <div>

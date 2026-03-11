@@ -24,8 +24,9 @@ export default function ProductDetailPage() {
 
   const handleWhatsApp = () => {
     if (!product) return;
+    const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '521234567890';
     const message = encodeURIComponent(`¡Hola! Me interesa este producto hecho a mano:\n\n*${product.name}*\nPrecio: $${parseFloat(product.price).toFixed(2)}\nLink: ${window.location.href}`);
-    window.open(`https://wa.me/521234567890?text=${message}`, '_blank');
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
   if (productLoading) {

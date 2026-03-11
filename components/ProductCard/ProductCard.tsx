@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Product } from '@/types/api';
-import { Heart } from 'lucide-react';
+import { Heart, MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 
 interface ProductCardProps {
@@ -13,11 +13,19 @@ export default function ProductCard({ product }: ProductCardProps) {
     : undefined;
   const productPrice = parseFloat(product.price);
 
+  const handleWhatsApp = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '50588888888';
+    const productUrl = typeof window !== 'undefined' ? `${window.location.origin}/product/${product.slug}` : '';
+    const message = encodeURIComponent(`¡Hola! Me interesa este producto hecho a mano:\n\n*${product.name}*\nPrecio: $${!isNaN(productPrice) ? productPrice.toFixed(2) : product.price}\nLink: ${productUrl}`);
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+  };
+
   return (
     <div className="group bg-white flex flex-col h-full transition-all duration-300 relative border border-transparent hover:border-gray-100">
       {/* Image Container - Sanrio style gray box */}
       <Link href={`/product/${product.slug}`} className="relative aspect-square w-full overflow-hidden bg-[#f7f7f7] block">
-        {/* Note: Badge is not in the basic API contract but could be added later or handled via metadata if available */}
         <Image 
           src={primaryImage?.url || 'https://placehold.co/400x500/f7f7f7/cccccc?text=No+Image'} 
           alt={primaryImage?.altText || product.name}
@@ -42,14 +50,23 @@ export default function ProductCard({ product }: ProductCardProps) {
         
         {/* Sanrio Style Combined Button/Price */}
         <div className="mt-auto border border-[#111111] flex overflow-hidden">
-           <div className="flex-1 px-3 py-2 text-[11px] font-black flex items-center justify-center border-r border-[#111111]">
+           <div className="flex-1 px-2 py-2 text-[10px] font-black flex items-center justify-center border-r border-[#111111]">
              ${!isNaN(productPrice) ? productPrice.toFixed(2) : product.price}
            </div>
+           
+           <button 
+             onClick={handleWhatsApp}
+             className="flex-1 py-2 bg-[#25D366] text-[#111111] hover:text-white transition-colors flex items-center justify-center border-r border-[#111111]"
+             title="Comprar por WhatsApp"
+           >
+             <MessageCircle className="w-4 h-4" />
+           </button>
+
            <Link 
              href={`/product/${product.slug}`}
-             className="flex-[2] py-2 text-[10px] font-black uppercase tracking-widest text-center hover:bg-[#111111] hover:text-white transition-all flex items-center justify-center"
+             className="flex-1 py-2 text-[10px] font-black uppercase tracking-widest text-center hover:bg-[#111111] hover:text-white transition-all flex items-center justify-center"
            >
-             Ver Detalle
+             Ver
            </Link>
         </div>
       </div>

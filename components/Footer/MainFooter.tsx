@@ -7,7 +7,7 @@ export default function MainFooter() {
     <footer className="w-full bg-[#fdfdfd] mt-20">
       
 
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-16 border-t border-gray-100">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12">
           {/* Column 1 */}
           <div className="col-span-1">
