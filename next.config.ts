@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'www.sanrio.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+      },
     ],
   },
 };

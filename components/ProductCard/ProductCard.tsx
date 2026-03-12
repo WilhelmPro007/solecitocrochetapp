@@ -8,17 +8,15 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const primaryImage = Array.isArray(product.images) 
-    ? (product.images.find(img => img.isPrimary) || product.images[0])
-    : undefined;
-  const productPrice = parseFloat(product.price);
+  const primaryImage = product.primaryImage;
+  const productPrice = product.price;
 
   const handleWhatsApp = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '50588888888';
     const productUrl = typeof window !== 'undefined' ? `${window.location.origin}/product/${product.slug}` : '';
-    const message = encodeURIComponent(`¡Hola! Me interesa este producto hecho a mano:\n\n*${product.name}*\nPrecio: $${!isNaN(productPrice) ? productPrice.toFixed(2) : product.price}\nLink: ${productUrl}`);
+    const message = encodeURIComponent(`¡Hola! Me interesa este producto hecho a mano:\n\n*${product.name}*\nPrecio: $${productPrice.toFixed(2)}\nLink: ${productUrl}`);
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
@@ -51,7 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Sanrio Style Combined Button/Price */}
         <div className="mt-auto border border-[#111111] flex overflow-hidden">
            <div className="flex-1 px-2 py-2 text-[10px] font-black flex items-center justify-center border-r border-[#111111]">
-             ${!isNaN(productPrice) ? productPrice.toFixed(2) : product.price}
+             ${productPrice.toFixed(2)}
            </div>
            
            <button 

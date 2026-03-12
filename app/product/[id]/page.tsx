@@ -25,7 +25,7 @@ export default function ProductDetailPage() {
   const handleWhatsApp = () => {
     if (!product) return;
     const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '521234567890';
-    const message = encodeURIComponent(`¡Hola! Me interesa este producto hecho a mano:\n\n*${product.name}*\nPrecio: $${parseFloat(product.price).toFixed(2)}\nLink: ${window.location.href}`);
+    const message = encodeURIComponent(`¡Hola! Me interesa este producto hecho a mano:\n\n*${product.name}*\nPrecio: $${product.price.toFixed(2)}\nLink: ${window.location.href}`);
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
@@ -46,9 +46,13 @@ export default function ProductDetailPage() {
     );
   }
 
-  const images = product.images?.length > 0 ? product.images : [{ url: 'https://placehold.co/800x800/f7f7f7/cccccc?text=Sin+Imagen', isPrimary: true }];
+  const images = product.primaryImage ? [product.primaryImage, ...(product.images || []).filter(img => img.url !== product.primaryImage.url)] : (product.images || []);
+  if (images.length === 0) {
+    images.push({ url: 'https://placehold.co/800x800/f7f7f7/cccccc?text=Sin+Imagen', isPrimary: true });
+  }
+
   const currentImage = images[selectedImageIndex] || images[0];
-  const price = parseFloat(product.price);
+  const price = product.price;
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -102,9 +106,7 @@ export default function ProductDetailPage() {
               <div className="text-[10px] font-bold text-gray-400 mb-4 uppercase tracking-wider">
                 SKU: {product.sku || 'N/A'}
               </div>
-              <div className="text-xl font-bold text-[#111111] mb-8">
-                ${!isNaN(price) ? price.toFixed(2) : product.price}
-              </div>
+                ${price.toFixed(2)}
               
               {/* Quantity Selector */}
               <div className="flex items-center gap-4 mb-8">

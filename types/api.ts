@@ -1,7 +1,8 @@
 export interface Image {
+  id?: string;
   url: string;
-  isPrimary: boolean;
   altText?: string;
+  isPrimary?: boolean;
 }
 
 export interface Category {
@@ -14,22 +15,37 @@ export interface Product {
   id: string;
   name: string;
   slug: string;
-  price: string;
-  comparePrice?: string;
+  price: number;
+  comparePrice?: number | null;
   sku?: string;
   quantity?: number;
   description?: string;
-  images: Image[];
+  isActive?: boolean;
+  primaryImage: Image;
+  images?: Image[]; // Keeping optional for backwards compatibility during transition if needed
+  categoryName?: string;
   categories?: Category[];
 }
 
 export interface Meta {
   total: number;
+  count?: number;
   limit: number;
   offset: number;
+  hasNext?: boolean;
+  hasPrevious?: boolean;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+  meta?: any;
 }
 
 export interface PaginatedResponse<T> {
+  success: boolean;
+  message: string;
   data: T[];
   meta: Meta;
 }
