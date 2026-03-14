@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Product } from '@/types/api';
 import { Heart, MessageCircle } from 'lucide-react';
 import { getProductImageSrc } from '@/lib/image-utils';
