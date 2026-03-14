@@ -11,16 +11,16 @@ import { ChevronRight, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 
 export default function LandingPage() {
   const { data: categoriesData, loading: categoriesLoading } = useCategories();
-  const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
+  const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(null);
   
   // Set default category once categories are loaded
   useEffect(() => {
-    if (categoriesData && categoriesData.length > 0 && !activeCategoryId) {
-      setActiveCategoryId(categoriesData[0].id);
+    if (categoriesData && categoriesData.length > 0 && !activeCategorySlug) {
+      setActiveCategorySlug(categoriesData[0].slug);
     }
-  }, [categoriesData, activeCategoryId]);
+  }, [categoriesData, activeCategorySlug]);
 
-  const { data: productsData, loading: productsLoading } = useProducts(5, 0, activeCategoryId || undefined);
+  const { data: productsData, loading: productsLoading } = useProducts(5, 0, activeCategorySlug || undefined);
 
   const allProducts = Array.isArray(productsData?.data) ? productsData.data : [];
   const products = allProducts.filter((p, index, self) => 
@@ -108,9 +108,9 @@ export default function LandingPage() {
             {categories.map((cat) => (
               <button 
                 key={cat.id} 
-                onClick={() => setActiveCategoryId(cat.id)}
+                onClick={() => setActiveCategorySlug(cat.slug)}
                 className={`group relative aspect-[16/10] md:aspect-[4/3] overflow-hidden transition-all duration-300 ${
-                  activeCategoryId === cat.id ? 'ring-2 ring-primary ring-offset-4 shadow-xl' : 'border border-gray-100'
+                  activeCategorySlug === cat.slug ? 'ring-2 ring-primary ring-offset-4 shadow-xl' : 'border border-gray-100'
                 }`}
               >
                 <Image 
@@ -120,7 +120,7 @@ export default function LandingPage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-700 Mix-blend-multiply"
                 />
                 <div className={`absolute inset-0 transition-opacity duration-300 ${
-                  activeCategoryId === cat.id ? 'bg-primary/5' : 'bg-black/5 group-hover:bg-black/0'
+                  activeCategorySlug === cat.slug ? 'bg-primary/5' : 'bg-black/5 group-hover:bg-black/0'
                 }`} />
                 <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
                   <h3 className="text-2xl font-bold text-[#111111] uppercase tracking-tighter leading-none mb-2 drop-shadow-sm">

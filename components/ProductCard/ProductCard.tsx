@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Product } from '@/types/api';
 import { Heart, MessageCircle } from 'lucide-react';
-import Image from 'next/image';
+import { getProductImageSrc } from '@/lib/image-utils';
 
 interface ProductCardProps {
   product: Product;
@@ -10,6 +10,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const primaryImage = product.primaryImage;
   const productPrice = product.price;
+  const imageSrc = getProductImageSrc(primaryImage);
 
   const handleWhatsApp = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -25,7 +26,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Image Container - Sanrio style gray box */}
       <Link href={`/product/${product.slug}`} className="relative aspect-square w-full overflow-hidden bg-[#f7f7f7] block">
         <Image 
-          src={primaryImage?.url || 'https://placehold.co/400x500/f7f7f7/cccccc?text=No+Image'} 
+          src={imageSrc} 
           alt={primaryImage?.altText || product.name}
           fill
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"

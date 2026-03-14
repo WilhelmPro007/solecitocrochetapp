@@ -64,7 +64,7 @@ function NavbarContent() {
                   {Array.isArray(categories) && categories.map((cat: any) => (
                     <Link 
                       key={cat.id} 
-                      href={`/shop?category=${cat.id}`} 
+                      href={`/shop?category=${cat.slug}`} 
                       scroll={false}
                       className="hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary pb-1"
                     >

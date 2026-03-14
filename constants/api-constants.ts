@@ -4,6 +4,7 @@ export const API_ENDPOINTS = {
   SEARCH_PRODUCTS: '/products/search',
   CATEGORIES_ACTIVE: '/categories',
   PRODUCTS_BY_CATEGORY: (categoryId: string) => `/products/category/${categoryId}`,
+  PRODUCTS_BY_CATEGORY_SLUG: (slug: string) => `/products/category/slug/${slug}`,
   TENANT_CONFIG: '/tenants/config',
 } as const;
 

@@ -10,6 +10,8 @@ import { useProduct, useProductsByCategory } from '@/hooks/use-catalog';
 import { ChevronRight, Loader2, Share2, Heart, ShieldCheck, Truck, RotateCcw, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
+import { getProductImageSrc } from '@/lib/image-utils';
+
 export default function ProductDetailPage() {
   const params = useParams();
   const slug = params.id as string;
@@ -46,12 +48,30 @@ export default function ProductDetailPage() {
     );
   }
 
-  const images = product.primaryImage ? [product.primaryImage, ...(product.images || []).filter(img => img.url !== product.primaryImage.url)] : (product.images || []);
-  if (images.length === 0) {
-    images.push({ url: 'https://placehold.co/800x800/f7f7f7/cccccc?text=Sin+Imagen', isPrimary: true });
+  // Normalize images: Combine primary image with gallery, avoiding duplicates
+  const allImages: (string | Image)[] = [];
+  if (product.primaryImage) allImages.push(product.primaryImage);
+  if (product.images) allImages.push(...product.images);
+
+  // Deduplicate and fallback
+  const uniqueImageSrcs = new Set<string>();
+  const normalizedImages = allImages.map(img => ({
+    src: getProductImageSrc(img),
+    alt: (typeof img !== 'string' && img.altText) ? img.altText : product.name
+  })).filter(item => {
+    if (uniqueImageSrcs.has(item.src)) return false;
+    uniqueImageSrcs.add(item.src);
+    return true;
+  });
+
+  if (normalizedImages.length === 0) {
+    normalizedImages.push({ 
+      src: 'https://placehold.co/800x800/f7f7f7/cccccc?text=Sin+Imagen', 
+      alt: 'Sin Imagen' 
+    });
   }
 
-  const currentImage = images[selectedImageIndex] || images[0];
+  const currentImage = normalizedImages[selectedImageIndex] || normalizedImages[0];
   const price = product.price;
 
   return (
@@ -73,8 +93,8 @@ export default function ProductDetailPage() {
           <div className="lg:col-span-7 space-y-4">
             <div className="relative aspect-square bg-[#f9f9f9] border-2 border-[#111111] overflow-hidden group">
                <Image 
-                 src={currentImage.url} 
-                 alt={currentImage.altText || product?.name || 'Imagen del producto'}
+                 src={currentImage.src} 
+                 alt={currentImage.alt}
                  fill
                  className="object-contain p-8 group-hover:scale-105 transition-transform duration-700"
                  priority
@@ -83,7 +103,7 @@ export default function ProductDetailPage() {
             
             {/* Thumbnails */}
             <div className="grid grid-cols-4 gap-4">
-              {images.map((img, i) => (
+              {normalizedImages.map((img, i) => (
                 <button 
                   key={i}
                   onClick={() => setSelectedImageIndex(i)}
@@ -91,7 +111,7 @@ export default function ProductDetailPage() {
                     selectedImageIndex === i ? 'border-primary shadow-[4px_4px_0px_#ff5ebc]' : 'border-[#111111] opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <Image src={img.url} alt={`Thumbnail ${i}`} fill className="object-contain p-2" />
+                  <Image src={img.src} alt={`Thumbnail ${i}`} fill className="object-contain p-2" />
                 </button>
               ))}
             </div>

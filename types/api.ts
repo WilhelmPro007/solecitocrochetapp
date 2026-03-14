@@ -1,6 +1,7 @@
 export interface Image {
   id?: string;
-  url: string;
+  url?: string;
+  imageData?: string;
   altText?: string;
   isPrimary?: boolean;
 }
@@ -22,7 +23,7 @@ export interface Product {
   description?: string;
   isActive?: boolean;
   primaryImage: Image;
-  images?: Image[]; // Keeping optional for backwards compatibility during transition if needed
+  images?: (Image | string)[]; // Allowing both structured images and raw base64 strings
   categoryName?: string;
   categories?: Category[];
 }

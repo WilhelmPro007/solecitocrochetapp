@@ -52,18 +52,18 @@ function ShopContent() {
     return () => observer.disconnect();
   }, [hasMore, loading, loadMore]);
 
-  const handleCategorySelect = (categoryId: string) => {
-    if (activeCategory === categoryId) {
+  const handleCategorySelect = (categorySlug: string) => {
+    if (activeCategory === categorySlug) {
       router.push('/shop', { scroll: false });
     } else {
-      router.push(`/shop?category=${categoryId}`, { scroll: false });
+      router.push(`/shop?category=${categorySlug}`, { scroll: false });
     }
   };
 
   const getPageTitle = () => {
     if (searchQuery) return `Resultados para: "${searchQuery}"`;
     if (activeCategory) {
-      const category = categories?.find((c: Category) => c.id === activeCategory);
+      const category = categories?.find((c: Category) => c.slug === activeCategory);
       return `Categoría: ${category?.name || 'Cargando...'}`;
     }
     return 'Catálogo Solecito';

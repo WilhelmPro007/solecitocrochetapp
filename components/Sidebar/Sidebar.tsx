@@ -73,18 +73,18 @@ export default function Sidebar({ activeCategory, onSelectCategory }: SidebarPro
                 Array.isArray(categories) && categories.map((cat) => (
                   <li 
                     key={cat.id} 
-                    onClick={() => onSelectCategory?.(cat.id)}
+                    onClick={() => onSelectCategory?.(cat.slug)}
                     className="flex items-center gap-3 group cursor-pointer"
                   >
                     <div className={`w-4 h-4 border-2 transition-colors flex items-center justify-center ${
-                      activeCategory === cat.id ? 'border-primary' : 'border-border group-hover:border-primary'
+                      activeCategory === cat.slug ? 'border-primary' : 'border-border group-hover:border-primary'
                     }`}>
                       <div className={`w-2 h-2 bg-primary transition-transform ${
-                        activeCategory === cat.id ? 'scale-100' : 'scale-0 group-hover:scale-100'
+                        activeCategory === cat.slug ? 'scale-100' : 'scale-0 group-hover:scale-100'
                       }`}></div>
                     </div>
                     <span className={`text-[11px] font-bold uppercase tracking-wider transition-colors ${
-                      activeCategory === cat.id ? 'text-[#111111]' : 'text-[#111111]/70 group-hover:text-[#111111]'
+                      activeCategory === cat.slug ? 'text-[#111111]' : 'text-[#111111]/70 group-hover:text-[#111111]'
                     }`}>
                       {cat.name}
                     </span>

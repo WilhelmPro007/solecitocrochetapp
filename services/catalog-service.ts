@@ -22,9 +22,16 @@ apiClient.interceptors.request.use((config) => {
 
 export const CatalogService = {
   getProducts: async (limit = 10, offset = 0, categoryId?: string) => {
-    const url = categoryId 
-      ? API_ENDPOINTS.PRODUCTS_BY_CATEGORY(categoryId) 
-      : API_ENDPOINTS.PRODUCTS;
+    let url: string = API_ENDPOINTS.PRODUCTS;
+    
+    if (categoryId) {
+      // If it looks like a UUID, use ID endpoint, otherwise assume it's a slug
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId);
+      url = isUuid 
+        ? API_ENDPOINTS.PRODUCTS_BY_CATEGORY(categoryId) 
+        : API_ENDPOINTS.PRODUCTS_BY_CATEGORY_SLUG(categoryId);
+    }
+
     const response = await apiClient.get<PaginatedResponse<Product>>(url, {
       params: { limit, offset },
     });
@@ -32,7 +39,12 @@ export const CatalogService = {
   },
   
   getProductsByCategory: async (categoryId: string, limit = 10, offset = 0) => {
-    const response = await apiClient.get<PaginatedResponse<Product>>(API_ENDPOINTS.PRODUCTS_BY_CATEGORY(categoryId), {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId);
+    const url = isUuid 
+      ? API_ENDPOINTS.PRODUCTS_BY_CATEGORY(categoryId) 
+      : API_ENDPOINTS.PRODUCTS_BY_CATEGORY_SLUG(categoryId);
+
+    const response = await apiClient.get<PaginatedResponse<Product>>(url, {
       params: { limit, offset },
     });
     return response.data;
