@@ -48,26 +48,20 @@ export default function ProductCard({ product }: ProductCardProps) {
           </h3>
         </Link>
         
-        {/* Sanrio Style Combined Button/Price */}
-        <div className="mt-auto border border-[#111111] flex overflow-hidden">
-           <div className="flex-1 px-2 py-2 text-[10px] font-black flex items-center justify-center border-r border-[#111111]">
+        {/* Sanrio Style Combined Action Bar */}
+        <div className="mt-auto flex border border-[#111111] bg-white overflow-hidden rounded-sm transition-all shadow-sm hover:shadow-md">
+           <div className="flex-[0.7] px-3 py-2.5 text-[11px] font-black flex items-center justify-center border-r border-[#111111] tracking-tighter">
              ${productPrice.toFixed(2)}
            </div>
            
            <button 
              onClick={handleWhatsApp}
-             className="flex-1 py-2 bg-[#25D366] text-[#111111] hover:text-white transition-colors flex items-center justify-center border-r border-[#111111]"
-             title="Comprar por WhatsApp"
+             className="flex-1 py-2.5 bg-[#25D366] text-white hover:bg-[#20ba59] transition-all flex items-center justify-center gap-2 group/wa active:scale-[0.98]"
+             title="Pedir por WhatsApp"
            >
-             <MessageCircle className="w-4 h-4" />
+             <MessageCircle className="w-3.5 h-3.5 fill-white text-white" />
+             <span className="text-[9px] font-black uppercase tracking-widest leading-none">WhatsApp</span>
            </button>
-
-           <Link 
-             href={`/product/${product.slug}`}
-             className="flex-1 py-2 text-[10px] font-black uppercase tracking-widest text-center hover:bg-[#111111] hover:text-white transition-all flex items-center justify-center"
-           >
-             Ver
-           </Link>
         </div>
       </div>
     </div>

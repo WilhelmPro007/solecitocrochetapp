@@ -21,31 +21,24 @@ apiClient.interceptors.request.use((config) => {
 });
 
 export const CatalogService = {
-  getProducts: async (limit = 10, offset = 0, categoryId?: string) => {
-    let url: string = API_ENDPOINTS.PRODUCTS;
+  /**
+   * Universal product fetcher supporting search, categories, and all filters.
+   */
+  getProducts: async (params: {
+    limit?: number;
+    offset?: number;
+    sort?: string;
+    q?: string;
+    category?: string;
+    categoryId?: string;
+    minPrice?: number;
+    maxPrice?: number;
+  } = {}) => {
+    // Determine which endpoint to use. q implies search.
+    const url = params.q ? API_ENDPOINTS.SEARCH_PRODUCTS : API_ENDPOINTS.PRODUCTS;
     
-    if (categoryId) {
-      // If it looks like a UUID, use ID endpoint, otherwise assume it's a slug
-      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId);
-      url = isUuid 
-        ? API_ENDPOINTS.PRODUCTS_BY_CATEGORY(categoryId) 
-        : API_ENDPOINTS.PRODUCTS_BY_CATEGORY_SLUG(categoryId);
-    }
-
     const response = await apiClient.get<PaginatedResponse<Product>>(url, {
-      params: { limit, offset },
-    });
-    return response.data;
-  },
-  
-  getProductsByCategory: async (categoryId: string, limit = 10, offset = 0) => {
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId);
-    const url = isUuid 
-      ? API_ENDPOINTS.PRODUCTS_BY_CATEGORY(categoryId) 
-      : API_ENDPOINTS.PRODUCTS_BY_CATEGORY_SLUG(categoryId);
-
-    const response = await apiClient.get<PaginatedResponse<Product>>(url, {
-      params: { limit, offset },
+      params,
     });
     return response.data;
   },
@@ -53,13 +46,6 @@ export const CatalogService = {
   getProductBySlug: async (slug: string) => {
     const response = await apiClient.get<ApiResponse<Product>>(API_ENDPOINTS.PRODUCT_BY_SLUG(slug));
     return response.data.data;
-  },
-  
-  searchProducts: async (query: string, limit = 10, offset = 0) => {
-    const response = await apiClient.get<PaginatedResponse<Product>>(API_ENDPOINTS.SEARCH_PRODUCTS, {
-      params: { q: query, limit, offset },
-    });
-    return response.data;
   },
   
   getActiveCategories: async () => {

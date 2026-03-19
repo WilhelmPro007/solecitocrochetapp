@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar/Navbar';
 import MainFooter from '@/components/Footer/MainFooter';
@@ -9,6 +9,7 @@ import ProductCard from '@/components/ProductCard/ProductCard';
 import { useProduct, useProductsByCategory } from '@/hooks/use-catalog';
 import { ChevronRight, Loader2, Share2, Heart, ShieldCheck, Truck, RotateCcw, Sparkles } from 'lucide-react';
 import { useState } from 'react';
+import { Image as ProductImage } from '@/types/api';
 
 import { getProductImageSrc } from '@/lib/image-utils';
 
@@ -49,7 +50,7 @@ export default function ProductDetailPage() {
   }
 
   // Normalize images: Combine primary image with gallery, avoiding duplicates
-  const allImages: (string | Image)[] = [];
+  const allImages: (string | ProductImage)[] = [];
   if (product.primaryImage) allImages.push(product.primaryImage);
   if (product.images) allImages.push(...product.images);
 
@@ -92,7 +93,7 @@ export default function ProductDetailPage() {
           {/* Left: Image Gallery */}
           <div className="lg:col-span-7 space-y-4">
             <div className="relative aspect-square bg-[#f9f9f9] border-2 border-[#111111] overflow-hidden group">
-               <Image 
+               <NextImage 
                  src={currentImage.src} 
                  alt={currentImage.alt}
                  fill
@@ -111,7 +112,7 @@ export default function ProductDetailPage() {
                     selectedImageIndex === i ? 'border-primary shadow-[4px_4px_0px_#ff5ebc]' : 'border-[#111111] opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <Image src={img.src} alt={`Thumbnail ${i}`} fill className="object-contain p-2" />
+                  <NextImage src={img.src} alt={`Thumbnail ${i}`} fill className="object-contain p-2" />
                 </button>
               ))}
             </div>

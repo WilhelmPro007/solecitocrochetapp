@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CatalogService } from '@/services/catalog-service';
 import { Product, PaginatedResponse, Category, TenantConfig } from '@/types/api';
 
@@ -6,39 +6,50 @@ import { Product, PaginatedResponse, Category, TenantConfig } from '@/types/api'
  * Scalable hook for infinite product lists with filtering and search support.
  * Unifies pagination logic and prevents infinite fetch loops.
  */
-export function useInfiniteProducts(initialLimit = 8, category?: string, searchQuery?: string) {
+export function useInfiniteProducts(initialLimit = 8, category?: string, searchQuery?: string, sort?: string) {
   const [products, setProducts] = useState<Product[]>([]);
   const [meta, setMeta] = useState<PaginatedResponse<Product>['meta'] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
   const [offset, setOffset] = useState(0);
+  const lastFilters = useRef({ category, searchQuery, sort });
 
-  // Reset state when category or search query changes
-  useEffect(() => {
-    setProducts([]);
-    setOffset(0);
-    setMeta(null);
-    setError(null);
-    // Intersection observer in the component should trigger the first fetch via offset=0 or we do it here
-  }, [category, searchQuery]);
-
+  // Single effect to handle fetches and resets
   useEffect(() => {
     let ignore = false;
     
-    const fetchItems = async () => {
+    // Detect if filters changed to force a reset
+    const filtersChanged = 
+      lastFilters.current.category !== category ||
+      lastFilters.current.searchQuery !== searchQuery ||
+      lastFilters.current.sort !== sort;
+
+    if (filtersChanged) {
+      lastFilters.current = { category, searchQuery, sort };
+    }
+
+    const fetchItems = async (isReset: boolean) => {
       try {
         setLoading(true);
-        let result: PaginatedResponse<Product>;
+        const fetchOffset = isReset ? 0 : offset;
         
-        if (searchQuery) {
-          result = await CatalogService.searchProducts(searchQuery, initialLimit, offset);
-        } else {
-          result = await CatalogService.getProducts(initialLimit, offset, category);
-        }
+        const result = await CatalogService.getProducts({
+          limit: initialLimit,
+          offset: fetchOffset,
+          category,
+          q: searchQuery,
+          sort
+        });
 
         if (!ignore) {
-          setProducts(prev => (offset === 0 ? result.data : [...prev, ...result.data]));
+          if (isReset) {
+            setProducts(result.data);
+            setOffset(0);
+          } else {
+            setProducts(prev => [...prev, ...result.data]);
+          }
           setMeta(result.meta);
+          setError(null);
         }
       } catch (err) {
         if (!ignore) setError(err);
@@ -47,12 +58,13 @@ export function useInfiniteProducts(initialLimit = 8, category?: string, searchQ
       }
     };
 
-    fetchItems();
+    fetchItems(filtersChanged || offset === 0);
 
     return () => {
       ignore = true;
     };
-  }, [offset, category, searchQuery, initialLimit]);
+  }, [offset, category, searchQuery, sort, initialLimit]);
+
 
   const loadMore = () => {
     if (!loading && meta && products.length < meta.total) {
@@ -137,7 +149,7 @@ export function useProductsByCategory(categoryId: string) {
       if (!categoryId) return;
       try {
         setLoading(true);
-        const result = await CatalogService.getProductsByCategory(categoryId);
+        const result = await CatalogService.getProducts({ categoryId });
         setData(result);
       } catch (err) {
         setError(err);
@@ -194,12 +206,7 @@ export function useProducts(limit = 10, offset = 0, category?: string) {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        let result;
-        if (category) {
-          result = await CatalogService.getProductsByCategory(category, limit, offset);
-        } else {
-          result = await CatalogService.getProducts(limit, offset);
-        }
+        const result = await CatalogService.getProducts({ limit, offset, category });
         
         setData(prev => {
           if (offset === 0) return result;
@@ -245,7 +252,7 @@ export function useCatalogSearch(query: string, limit = 10, offset = 0) {
       }
       try {
         setLoading(true);
-        const result = await CatalogService.searchProducts(query, limit, offset);
+        const result = await CatalogService.getProducts({ q: query, limit, offset });
         
         setData(prev => {
           if (offset === 0 || !prev) return result;
