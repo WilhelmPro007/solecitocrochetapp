@@ -1,22 +1,21 @@
 import type { Metadata } from "next";
-import { Nunito, Quicksand } from "next/font/google";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 
-const nunito = Nunito({
-  variable: "--font-nunito",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
 });
 
-const quicksand = Quicksand({
-  variable: "--font-quicksand",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Solecito Crochet | Amigurumis y Accesorios Kawaii",
-  description: "Artículos de crochet hechos a mano, amigurumis, mantas y más.",
+  title: "Solecito Crochet | Detalles tejidos para historias de dos",
+  description: "Regalos de crochet hechos a mano para celebrar el amor, los recuerdos y las personas especiales.",
 };
 
 export default function RootLayout({
@@ -26,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${nunito.variable} ${quicksand.variable} antialiased bg-background text-foreground font-sans`}>
+      <body className={`${manrope.variable} ${cormorant.variable} antialiased bg-background text-foreground font-sans`}>
         {children}
       </body>
     </html>

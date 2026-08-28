@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { CatalogService } from '@/services/catalog-service';
+import { MockCatalogService as CatalogService } from '@/services/mock-catalog-service';
 import { Product, PaginatedResponse, Category, TenantConfig } from '@/types/api';
 
 /**

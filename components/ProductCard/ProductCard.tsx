@@ -23,47 +23,47 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group bg-white flex flex-col h-full transition-all duration-300 relative border border-transparent hover:border-gray-100">
+    <article className="group bg-transparent flex flex-col h-full relative">
       {/* Image Container - Sanrio style gray box */}
-      <Link href={`/product/${product.slug}`} className="relative aspect-square w-full overflow-hidden bg-[#f7f7f7] block">
+      <Link href={`/product/${product.slug}`} className="relative aspect-square w-full overflow-hidden bg-[#eee9e1] block rounded-[2px]">
         <Image 
           src={imageSrc} 
           alt={primaryImage?.altText || product.name}
           fill
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
-          className="object-contain p-6 group-hover:scale-105 transition-transform duration-500 Mix-blend-multiply"
+          className="object-cover group-hover:scale-[1.035] transition-transform duration-700 ease-out"
         />
         
         {/* Heart Icon (Top Right) */}
-        <button className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-           <Heart className="w-5 h-5 text-[#111111] hover:fill-primary hover:text-primary transition-all" />
+        <button aria-label={`Guardar ${product.name}`} className="absolute top-3 right-3 z-10 w-9 h-9 grid place-items-center rounded-full bg-white/85 backdrop-blur opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+           <Heart className="w-4 h-4 text-foreground hover:fill-primary hover:text-primary transition-all" />
         </button>
       </Link>
 
       {/* Info Section */}
-      <div className="p-3 flex flex-col flex-1 bg-white">
-        <Link href={`/product/${product.slug}`} className="block mb-4">
-          <h3 className="text-[11px] leading-tight font-medium text-[#111111] hover:text-primary transition-colors line-clamp-2 h-8 uppercase tracking-wider">
+      <div className="pt-4 pb-2 flex flex-col flex-1">
+        <Link href={`/product/${product.slug}`} className="block mb-3">
+          <h3 className="font-display text-lg md:text-xl leading-[1.05] font-semibold text-foreground hover:text-primary transition-colors line-clamp-2 min-h-10">
             {product.name}
           </h3>
         </Link>
         
         {/* Sanrio Style Combined Action Bar */}
-        <div className="mt-auto flex border border-[#111111] bg-white overflow-hidden rounded-sm transition-all shadow-sm hover:shadow-md">
-           <div className="flex-[0.7] px-3 py-2.5 text-[11px] font-black flex items-center justify-center border-r border-[#111111] tracking-tighter">
+        <div className="mt-auto flex border-t border-foreground/20 transition-colors group-hover:border-primary/50">
+           <div className="flex-[0.7] px-2 py-3 text-[11px] font-semibold flex items-center justify-start tracking-wide">
              ${productPrice.toFixed(2)}
            </div>
            
            <button 
              onClick={handleWhatsApp}
-             className="flex-1 py-2.5 bg-[#25D366] text-white hover:bg-[#20ba59] transition-all flex items-center justify-center gap-2 group/wa active:scale-[0.98]"
+             className="flex-1 py-3 text-foreground hover:text-primary transition-colors flex items-center justify-end gap-2 group/wa active:scale-[0.98]"
              title="Pedir por WhatsApp"
            >
-             <MessageCircle className="w-3.5 h-3.5 fill-white text-white" />
-             <span className="text-[9px] font-black uppercase tracking-widest leading-none">WhatsApp</span>
+             <MessageCircle className="w-3.5 h-3.5" />
+             <span className="text-[9px] font-semibold uppercase tracking-[0.12em] leading-none">Consultar</span>
            </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

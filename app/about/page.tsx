@@ -32,7 +32,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="relative aspect-square bg-[#f7f7f7] overflow-hidden">
              <Image 
-               src="https://placehold.co/1000x1000/ffdef1/ffffff?text=%F0%9F%A7%B6" 
+               src="/images/AboutMe/ME.jpeg" 
                alt="Proceso Artesanal"
                fill
                className="object-cover Mix-blend-multiply p-20"

@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-primary: #ff5ebc; /* Vibrant Sanrio Pink */
-  --color-secondary: #ffb7e4; /* Soft Pink */
-  --color-accent: #86e3ce; /* Mint-ish */
-  --color-background: #ffffff; /* Clean White */
-  --color-surface: #fdfdfd;
-  --color-foreground: #111111; /* Sharp Black */
-  --color-border: #eeeeee;
-  --color-muted: #666666;
+  --color-primary: #a44f3f;
+  --color-secondary: #d8b7a7;
+  --color-accent: #66705b;
+  --color-background: #f8f5ef;
+  --color-surface: #fffdf9;
+  --color-foreground: #2d2926;
+  --color-border: #ded7cc;
+  --color-muted: #756d66;
   --color-kuromi-purple: #9b59b6;
   --color-kuromi-pink: #f06292;
 
-  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cormorant), Georgia, serif;
 }
+
+html { scroll-behavior: smooth; }
 
 body {
   background-color: var(--color-background);
@@ -23,9 +25,30 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom scrollbar to fit the kawaii theme */
+::selection { background: #d8b7a7; color: #2d2926; }
+
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gentle-drift {
+  0%, 100% { transform: scale(1.03) translate3d(0, 0, 0); }
+  50% { transform: scale(1.07) translate3d(-0.5%, -0.5%, 0); }
+}
+
+.reveal-up { animation: reveal-up .9s cubic-bezier(.22,1,.36,1) both; }
+.reveal-delay-1 { animation-delay: .12s; }
+.reveal-delay-2 { animation-delay: .24s; }
+.hero-drift { animation: gentle-drift 18s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -34,7 +57,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-secondary);
-  border-radius: 10px;
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
